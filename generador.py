@@ -945,7 +945,7 @@ def build_modo_2_html(
             <th>Listado de tareas aplicable al presente procedimiento</th>
         </tr>
         <tr>
-            <td class="block-two">2</td>
+            <td class="block-two">0</td>
             <td class="mode-box">MODO 2</td>
             <td class="tasks-cell">{task_rows}</td>
         </tr>
