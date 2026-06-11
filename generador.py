@@ -945,7 +945,7 @@ def build_modo_2_html(
             <th>Listado de tareas aplicable al presente procedimiento</th>
         </tr>
         <tr>
-            <td class="block-two">0</td>
+            <td class="block-two">2</td>
             <td class="mode-box">MODO 2</td>
             <td class="tasks-cell">{task_rows}</td>
         </tr>
@@ -1340,9 +1340,13 @@ def html_to_word_bytes(
     _docx_apply_table_grid(tasks_table, [2.0, 2.8, 13.0])
     for idx, title in enumerate(["Puntos de\nBloqueo", "Modo de\nIntervención", "Listado de tareas aplicable al presente procedimiento"]):
         _docx_write_cell(tasks_table.cell(0, idx), title, bold=True, size=7.2, color=MODO1_FONT_HEX, fill=MODO1_COLOR_HEX)
-    _docx_write_cell(tasks_table.cell(1, 0), "2", bold=True, size=32.0, fill="FFFFFF")
+    _docx_write_cell(tasks_table.cell(1, 0), "0", bold=True, size=32.0, fill="FFFFFF")
     _docx_write_cell(tasks_table.cell(1, 1), "MODO 2", bold=True, size=13.0, color=MODO1_FONT_HEX, fill=MODO1_COLOR_HEX)
-    tasks_text = "\n".join(f"- {task}" for task in (ctx.get("tareas") or []))
+    _tareas_word = ctx.get("tareas") or []
+    if len(_tareas_word) > 13:
+        tasks_text = " - ".join(_tareas_word)
+    else:
+        tasks_text = "\n".join(f"- {task}" for task in _tareas_word)
     _docx_write_cell(tasks_table.cell(1, 2), tasks_text, size=6.8, fill="FFFFFF", align="left")
 
     # Barra
@@ -1701,9 +1705,9 @@ def build_modo_2_excel_bytes(
     _xlsx_merge_write(ws, "A11:C11", "Puntos de\nBloqueo", fill=MODO1_COLOR_HEX, font_color=MODO1_FONT_HEX, bold=True, size=7)
     _xlsx_merge_write(ws, "D11:F11", "Modo de\nIntervención", fill=MODO1_COLOR_HEX, font_color=MODO1_FONT_HEX, bold=True, size=7)
     _xlsx_merge_write(ws, "G11:X11", "Listado de tareas aplicable al presente procedimiento", fill=MODO1_COLOR_HEX, font_color=MODO1_FONT_HEX, bold=True, size=7)
-    _xlsx_merge_write(ws, "A12:C15", "2", fill="FFFFFF", bold=True, size=32)
+    _xlsx_merge_write(ws, "A12:C15", "0", fill="FFFFFF", bold=True, size=32)
     _xlsx_merge_write(ws, "D12:F15", "MODO 2", fill=MODO1_COLOR_HEX, font_color=MODO1_FONT_HEX, bold=True, size=14)
-    _xlsx_merge_write(ws, "G12:X15", "\n".join(f"- {task}" for task in (ctx.get("tareas") or [])), fill="FFFFFF", size=7, align="left")
+    _xlsx_merge_write(ws, "G12:X15", (" - ".join(ctx.get("tareas") or []) if len(ctx.get("tareas") or []) > 13 else "\n".join(f"- {task}" for task in (ctx.get("tareas") or []))), fill="FFFFFF", size=7, align="left")
 
     # Barra + foto
     _xlsx_merge_write(ws, "A16:X16", "Procedimiento - Control de Energías Peligrosas", fill=MODO1_COLOR_HEX, font_color=MODO1_FONT_HEX, bold=True, size=8)
